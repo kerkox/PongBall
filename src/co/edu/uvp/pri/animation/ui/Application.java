@@ -6,10 +6,6 @@
 package co.edu.uvp.pri.animation.ui;
 
 import co.edu.uvp.pri.animation.ui.animation.Animation;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
