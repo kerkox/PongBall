@@ -1,5 +1,6 @@
 package co.edu.uvp.pri.animation.ui.animation;
 
+import com.sun.javafx.geom.Rectangle;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
@@ -7,6 +8,8 @@ import java.awt.event.MouseMotionAdapter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
+import org.w3c.dom.css.Rect;
 
 public class Animation extends JComponent implements Runnable {
 
@@ -17,6 +20,7 @@ public class Animation extends JComponent implements Runnable {
     private int dx = 1;
     private int dy = 1;
     public int speed = 50;
+    public Rectangle rebote;
 
     @Override
     public void paintComponent(Graphics g) {
@@ -26,10 +30,12 @@ public class Animation extends JComponent implements Runnable {
         g.setColor(Color.white);
         g.drawOval(posx, posy, 20, 20);
         //Rectangulo de rebote
+
+        rebote = new Rectangle(posxR, getHeight() - 10, 80, 10);
         g.setColor(Color.yellow);
         g.fillRect(posxR, getHeight() - 10, 80, 10);
         g.setColor(Color.white);
-        g.drawRect(posxR, getHeight() - 10, 80, 10);
+        g.drawRect(rebote.x, rebote.y, rebote.width, rebote.height);
 
     }
 
@@ -47,16 +53,22 @@ public class Animation extends JComponent implements Runnable {
                 }
 
             });
-            System.out.println("Valor de posxR: " + posxR);
+
             if (posx + 20 == (this.getWidth())) {
-//                back = true;
                 dx = -1;
             }
-            if (posy + 20 == this.getHeight()) {
+            
+
+            if (posy + 20 == rebote.y) {
+                if (posx+10 < rebote.x) {
+                    JOptionPane.showMessageDialog(null, "Game Over");
+                    this.pause();
+                }
+
                 dy = -1;
             }
+
             if (posx <= 0) {
-//                back = false;
                 dx = 1;
             }
             if (posy <= 0) {
@@ -87,7 +99,7 @@ public class Animation extends JComponent implements Runnable {
         this.pause();
         posx = 0;
         posy = 10;
-        posxR = (getWidth() / 2)-40;
+        posxR = (getWidth() / 2) - 40;
         this.init();
     }
 
