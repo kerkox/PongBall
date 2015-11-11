@@ -139,7 +139,13 @@ public class SpeedChange implements ChangeListener {
 
         @Override
         public void stateChanged(ChangeEvent e) {
-            animation.speed = (int) SpeedBall.getValue();
+            int value = (int) SpeedBall.getValue();
+            if (value < 0) {
+                SpeedBall.setValue(0);
+                value = 0;
+            }
+
+            animation.speed = value;
         }
 
     }
