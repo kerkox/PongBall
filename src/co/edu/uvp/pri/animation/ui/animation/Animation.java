@@ -9,22 +9,25 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
-import org.w3c.dom.css.Rect;
 
 public class Animation extends JComponent implements Runnable {
 
     private Thread thread = null;
-    private int posx = 0;
-    private int posy = 10;
+    private int posx = 100;
+    private int posy = 180;
     private int posxR = 0;
     private int dx = 1;
     private int dy = 1;
-    public int speed = 50;
+    public int speed = 20; // Velocidad de movimiento de la bola
     public Rectangle rebote;
+    private Rectangle r1 = null, r2 = null, r3 = null, r4 = null,
+                r5 = null, r6 = null, r7 = null, r8 = null;
+    private Rectangle[] rects = {r1, r2, r3, r4, r5, r6, r7, r8};
 
     @Override
     public void paintComponent(Graphics g) {
-//        posxR =getWidth()/2;
+
+        
         g.setColor(Color.red);
         g.fillOval(posx, posy, 20, 20);
         g.setColor(Color.white);
@@ -36,7 +39,41 @@ public class Animation extends JComponent implements Runnable {
         g.fillRect(posxR, getHeight() - 10, 80, 10);
         g.setColor(Color.white);
         g.drawRect(rebote.x, rebote.y, rebote.width, rebote.height);
+        level1(g);
+        
 
+    }
+
+    public void level1(Graphics g) {
+
+        
+        
+        int widthPanel = getWidth();
+        int xpos = 0, ypos = 0, width = widthPanel / 8, height = 20;
+        for (Rectangle r : rects) {
+            r = new Rectangle(xpos, ypos, width, height);
+            g.setColor(Color.BLUE);
+            g.fillRect(r.x, r.y, r.width, r.height);
+            g.setColor(Color.WHITE);
+            g.drawRect(r.x, r.y, r.width, r.height);
+            xpos += width;
+        }
+        
+    }
+    public int destroyRect(int px, int py){
+        for(Rectangle rect : rects){
+            if(rect==null) break;
+            if((py==rect.height)&&(px>=rect.x&&(px<=rect.x+rect.width))){
+                rect = null;
+                return 1;
+            }
+        }
+        if(py<=0){
+            return 1;
+        }
+        return -1;
+        
+        
     }
 
     @Override
@@ -57,10 +94,9 @@ public class Animation extends JComponent implements Runnable {
             if (posx + 20 == (this.getWidth())) {
                 dx = -1;
             }
-            
 
             if (posy + 20 == rebote.y) {
-                if (posx+10 < rebote.x) {
+                if (posx + 10 < rebote.x) {
                     JOptionPane.showMessageDialog(null, "Game Over");
                     this.pause();
                 }
@@ -74,6 +110,9 @@ public class Animation extends JComponent implements Runnable {
             if (posy <= 0) {
                 dy = 1;
             }
+            
+            //Evaluar cuando toque un rectangulo superior
+//            dy = destroyRect(posx, posy);
 
             repaint();
             try {

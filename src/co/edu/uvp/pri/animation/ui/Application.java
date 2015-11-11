@@ -19,8 +19,9 @@ public class Application extends javax.swing.JFrame {
 
     public Application() {
         initComponents();
-        SpeedBall.setValue(50);
+        
         animation = new Animation();
+        SpeedBall.setValue(animation.speed);
         this.panel.add(animation);
 
         SpeedBall.addChangeListener(new SpeedChange());
