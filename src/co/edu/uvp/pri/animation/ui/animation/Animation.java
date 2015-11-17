@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
@@ -22,10 +23,20 @@ public class Animation extends JComponent implements Runnable {
     public Rectangle rebote;
     private Rectangle r1 = null, r2 = null, r3 = null, r4 = null,
             r5 = null, r6 = null, r7 = null, r8 = null;
-    private Rectangle[] rects = {r1, r2, r3, r4, r5, r6, r7, r8};
+    private ArrayList<Rectangle> rects = new ArrayList<>();
+
+    private int paint = 8, survivors = paint; //variable para pintar
+    private int[] posDestroyed;
+
+    private int posD = 0;
 
     public Animation(int px, int py, int pxR) {
-
+        posDestroyed = new int[paint];
+        int index = 0;
+        while (index < paint) {
+            posDestroyed[index] = -1;
+            index++;
+        }
         this.posx = px;
         this.posy = py;
         this.posxR = pxR;
@@ -47,47 +58,81 @@ public class Animation extends JComponent implements Runnable {
         g.fillRect(posxR, getHeight() - 10, 80, 10);
         g.setColor(Color.white);
         g.drawRect(rebote.x, rebote.y, rebote.width, rebote.height);
-        level1(g);
+        level1(g, paint, survivors);
 
     }
 
-    public void level1(Graphics g) {
+    public void level1(Graphics g, int CantidadPaint, int survivors) {
 
         int widthPanel = getWidth();
-        int xpos = 0, ypos = 0, width = widthPanel / 8, height = 20;
-        int index = 0;
-        for (Rectangle r : rects) {
-            r = new Rectangle(xpos, ypos, width, height);
-            rects[index] = r;
-            index++;
-            g.setColor(Color.BLUE);
-            g.fillRect(r.x, r.y, r.width, r.height);
-            g.setColor(Color.WHITE);
-            g.drawRect(r.x, r.y, r.width, r.height);
+        rects.clear();
+        int xpos = 0, ypos = 0, width = widthPanel / CantidadPaint, height = 20;
+        int index = 0, indexD = 0, posDestroy = 0;
+        boolean pintar = true;
+        while (CantidadPaint > 0) {
+            pintar=true;
+            Rectangle r = new Rectangle(xpos, ypos, width, height);
+            while (indexD < posDestroyed.length) {
+                posDestroy = posDestroyed[indexD];
+                if (posDestroy == index) {
+                    pintar = false;
+                    break;
+                }
+                indexD++;
+
+            }
+            if (pintar) {
+                rects.add(r);
+
+                g.setColor(Color.BLUE);
+                g.fillRect(r.x, r.y, r.width, r.height);
+                g.setColor(Color.WHITE);
+                g.drawRect(r.x, r.y, r.width, r.height);
+            }
+
             xpos += width;
+            index++;
+            CantidadPaint--;
         }
 
     }
 
-    public int destroyRect(int px, int py) {
-        int index = 0;
+    public int posdestroyed(int px) {
+        int w = getWidth(), inicio = 0;
+        int pos = 0, anchor = (w / this.paint);
+        while (inicio <= w) {
+            if (px <= anchor) {
+                return pos;
+            }
+            inicio += anchor;
+            pos++;
+        }
+        return -1;
+    }
+
+    public boolean destroyRect(int px, int py) {
         for (Rectangle rect : rects) {
             if (rect != null) {
-                if ((py == rect.height) && (px >= rect.x && (px <= rect.x + rect.width))) {
-                    rect = null;
-                    rects[index] = null;
+                if ((py <= rect.height) && (px >= rect.x && (px <= rect.x + rect.width))) {
+
+                    this.survivors -= 1;
+//                    this.posDestroy = posdestroyed(px);
+                    this.posDestroyed[posD] = rects.indexOf(rect);
                     System.out.println("Lo toco");
-                    return 1;
+                    System.out.println("pos detroy: " + this.posDestroyed[posD]);
+                    posD++;
+
+                    return true;
                 }
             }
-            index++;
+
         }
         //De este pedazo no es necesario ya que se evalua en el hilo
         if (py <= 0) {
             System.out.println("toca una parte vacia");
-            return 1;
+            return true;
         }
-        return -1;
+        return false;
 
     }
 
@@ -123,13 +168,16 @@ public class Animation extends JComponent implements Runnable {
             if (posx <= 0) {
                 dx = 1;
             }
-            
-//            if (posy <= 0) {
-//                dy = 1;
-//            }
+
+            if (posy <= 0) {
+                dy = 1;
+            }
 
             //Evaluar cuando toque un rectangulo superior
-            dy = destroyRect(posx, posy);
+            if (destroyRect(posx, posy)) {
+                dy = 1;
+
+            }
 
             repaint();
             try {
