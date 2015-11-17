@@ -69,30 +69,23 @@ public class Animation extends JComponent implements Runnable {
         int xpos = 0, ypos = 0, width = widthPanel / CantidadPaint, height = 20;
         int index = 0, indexD = 0, posDestroy = 0;
         boolean pintar = true;
-        while (CantidadPaint > 0) {
-            pintar=true;
+//        indexD = CantidadPaint - 1;
+        indexD = 0;
+        while (indexD < CantidadPaint) {
+            pintar = true;
             Rectangle r = new Rectangle(xpos, ypos, width, height);
-            while (indexD < posDestroyed.length) {
-                posDestroy = posDestroyed[indexD];
-                if (posDestroy == index) {
-                    pintar = false;
-                    break;
-                }
-                indexD++;
 
-            }
-            if (pintar) {
+            if (posDestroyed[indexD] != indexD) {
                 rects.add(r);
-
                 g.setColor(Color.BLUE);
                 g.fillRect(r.x, r.y, r.width, r.height);
                 g.setColor(Color.WHITE);
                 g.drawRect(r.x, r.y, r.width, r.height);
+            } else {
+                rects.add(null);
             }
-
             xpos += width;
-            index++;
-            CantidadPaint--;
+            indexD++;
         }
 
     }
@@ -117,11 +110,14 @@ public class Animation extends JComponent implements Runnable {
 
                     this.survivors -= 1;
 //                    this.posDestroy = posdestroyed(px);
-                    this.posDestroyed[posD] = rects.indexOf(rect);
+                    this.posDestroyed[rects.indexOf(rect)] = rects.indexOf(rect);
                     System.out.println("Lo toco");
-                    System.out.println("pos detroy: " + this.posDestroyed[posD]);
-                    posD++;
-
+                    System.out.println("pos detroy: " + this.posDestroyed[rects.indexOf(rect)]);
+                    String arreglo = "";
+                    for (int i = 0; i < posDestroyed.length; i++) {
+                        arreglo += posDestroyed[i] + " ";
+                    }
+                    System.out.println("arreglo: " + arreglo);
                     return true;
                 }
             }
@@ -136,12 +132,26 @@ public class Animation extends JComponent implements Runnable {
 
     }
 
+    public boolean winner() {
+        for (Rectangle rect : rects) {
+            if (rect != null) {
+                return false;
+            }
+        }
+        return true;
+
+    }
+
     @Override
     public void run() {
 
         while (this.thread != null) {
             posx += dx;
             posy += dy;
+            if (winner()) {
+                JOptionPane.showMessageDialog(null, "Eres ganador!!!!!");
+                this.pause();
+            }
 
             //posicion del rectangulo segun el mouse
             addMouseMotionListener(new MouseMotionAdapter() {
