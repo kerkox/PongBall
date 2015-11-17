@@ -21,13 +21,20 @@ public class Animation extends JComponent implements Runnable {
     public int speed = 20; // Velocidad de movimiento de la bola
     public Rectangle rebote;
     private Rectangle r1 = null, r2 = null, r3 = null, r4 = null,
-                r5 = null, r6 = null, r7 = null, r8 = null;
+            r5 = null, r6 = null, r7 = null, r8 = null;
     private Rectangle[] rects = {r1, r2, r3, r4, r5, r6, r7, r8};
+
+    public Animation(int px, int py, int pxR) {
+
+        this.posx = px;
+        this.posy = py;
+        this.posxR = pxR;
+
+    }
 
     @Override
     public void paintComponent(Graphics g) {
-
-        
+        //Ball
         g.setColor(Color.red);
         g.fillOval(posx, posy, 20, 20);
         g.setColor(Color.white);
@@ -35,49 +42,58 @@ public class Animation extends JComponent implements Runnable {
         //Rectangulo de rebote
 
         rebote = new Rectangle(posxR, getHeight() - 10, 80, 10);
+
         g.setColor(Color.yellow);
         g.fillRect(posxR, getHeight() - 10, 80, 10);
         g.setColor(Color.white);
         g.drawRect(rebote.x, rebote.y, rebote.width, rebote.height);
         level1(g);
-        
 
     }
 
     public void level1(Graphics g) {
 
-        
-        
         int widthPanel = getWidth();
         int xpos = 0, ypos = 0, width = widthPanel / 8, height = 20;
+        int index = 0;
         for (Rectangle r : rects) {
             r = new Rectangle(xpos, ypos, width, height);
+            rects[index] = r;
+            index++;
             g.setColor(Color.BLUE);
             g.fillRect(r.x, r.y, r.width, r.height);
             g.setColor(Color.WHITE);
             g.drawRect(r.x, r.y, r.width, r.height);
             xpos += width;
         }
-        
+
     }
-    public int destroyRect(int px, int py){
-        for(Rectangle rect : rects){
-            if(rect==null) break;
-            if((py==rect.height)&&(px>=rect.x&&(px<=rect.x+rect.width))){
-                rect = null;
-                return 1;
+
+    public int destroyRect(int px, int py) {
+        int index = 0;
+        for (Rectangle rect : rects) {
+            if (rect != null) {
+                if ((py == rect.height) && (px >= rect.x && (px <= rect.x + rect.width))) {
+                    rect = null;
+                    rects[index] = null;
+                    System.out.println("Lo toco");
+                    return 1;
+                }
             }
+            index++;
         }
-        if(py<=0){
+        //De este pedazo no es necesario ya que se evalua en el hilo
+        if (py <= 0) {
+            System.out.println("toca una parte vacia");
             return 1;
         }
         return -1;
-        
-        
+
     }
 
     @Override
     public void run() {
+
         while (this.thread != null) {
             posx += dx;
             posy += dy;
@@ -107,12 +123,13 @@ public class Animation extends JComponent implements Runnable {
             if (posx <= 0) {
                 dx = 1;
             }
-            if (posy <= 0) {
-                dy = 1;
-            }
             
+//            if (posy <= 0) {
+//                dy = 1;
+//            }
+
             //Evaluar cuando toque un rectangulo superior
-//            dy = destroyRect(posx, posy);
+            dy = destroyRect(posx, posy);
 
             repaint();
             try {

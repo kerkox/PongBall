@@ -19,11 +19,23 @@ public class Application extends javax.swing.JFrame {
 
     public Application() {
         initComponents();
+        System.out.println("panel width: " + getWidth());
+        System.out.println("panel Height: "+ getHeight());
+        //        posxR = (getWidth() / 2) - 40;
+//        posx= posxR + 30;
+//        posy= getHeight() -30;
+        int w = getWidth();
+        int h = getHeight();
+        System.out.println("h -80 : "+(h-120));
+        int pxR = (w / 2) - 60;
+        int px = (w / 2) - 30;
+        int py = h - 127;
         
-        animation = new Animation();
+        animation = new Animation(px, py, pxR);
+        
         SpeedBall.setValue(animation.speed);
         this.panel.add(animation);
-
+        
         SpeedBall.addChangeListener(new SpeedChange());
     }
 
