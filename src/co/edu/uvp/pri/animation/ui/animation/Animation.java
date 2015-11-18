@@ -106,7 +106,7 @@ public class Animation extends JComponent implements Runnable {
     public boolean destroyRect(int px, int py) {
         for (Rectangle rect : rects) {
             if (rect != null) {
-                if ((py <= rect.height) && (px >= rect.x && (px <= rect.x + rect.width))) {
+                if ((py <= rect.height) && (px >= rect.x && (px<= rect.x + rect.width))) {
 
                     this.survivors -= 1;
 //                    this.posDestroy = posdestroyed(px);

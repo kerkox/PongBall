@@ -29,7 +29,7 @@ public class Application extends javax.swing.JFrame {
         System.out.println("h -80 : "+(h-120));
         int pxR = (w / 2) - 60;
         int px = (w / 2) - 30;
-        int py = h - 127;
+        int py = h - 90;
         
         animation = new Animation(px, py, pxR);
         
