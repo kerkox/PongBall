@@ -27,7 +27,7 @@ public class Animation extends JComponent implements Runnable {
 
     private int paint = 8, survivors = paint; //variable para pintar
     private int[] posDestroyed;
-
+    public boolean winner = false;
     private int posD = 0;
 
     public Animation(int px, int py, int pxR) {
@@ -148,7 +148,8 @@ public class Animation extends JComponent implements Runnable {
         while (this.thread != null) {
             posx += dx;
             posy += dy;
-            if (winner()) {
+            
+            if (this.winner=winner()) {
                 JOptionPane.showMessageDialog(null, "Eres ganador!!!!!");
                 this.pause();
             }

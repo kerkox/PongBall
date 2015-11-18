@@ -20,22 +20,22 @@ public class Application extends javax.swing.JFrame {
     public Application() {
         initComponents();
         System.out.println("panel width: " + getWidth());
-        System.out.println("panel Height: "+ getHeight());
+        System.out.println("panel Height: " + getHeight());
         //        posxR = (getWidth() / 2) - 40;
 //        posx= posxR + 30;
 //        posy= getHeight() -30;
         int w = getWidth();
         int h = getHeight();
-        System.out.println("h -80 : "+(h-120));
+        System.out.println("h -80 : " + (h - 120));
         int pxR = (w / 2) - 60;
         int px = (w / 2) - 30;
         int py = h - 90;
-        
+
         animation = new Animation(px, py, pxR);
-        
+
         SpeedBall.setValue(animation.speed);
         this.panel.add(animation);
-        
+
         SpeedBall.addChangeListener(new SpeedChange());
     }
 
@@ -48,7 +48,7 @@ public class Application extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        Start = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         panel = new javax.swing.JPanel();
@@ -57,10 +57,10 @@ public class Application extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("Iniciar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        Start.setText("Iniciar");
+        Start.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                StartActionPerformed(evt);
             }
         });
 
@@ -92,7 +92,7 @@ public class Application extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(Start)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -110,7 +110,7 @@ public class Application extends javax.swing.JFrame {
                 .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(Start)
                     .addComponent(jButton2)
                     .addComponent(jButton3)
                     .addComponent(SpeedBall, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -122,10 +122,15 @@ public class Application extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        animation.init();
-        animation.speed = (int) SpeedBall.getValue();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void StartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartActionPerformed
+        if (animation.winner) {
+            animation.restart();
+        } else {
+            animation.init();
+            animation.speed = (int) SpeedBall.getValue();
+        }
+
+    }//GEN-LAST:event_StartActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         animation.pause();
@@ -138,7 +143,7 @@ public class Application extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSpinner SpeedBall;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton Start;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
