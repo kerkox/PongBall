@@ -90,6 +90,18 @@ public class Animation extends JComponent implements Runnable {
 
     }
 
+    public void reniciarTablero() {
+        int index = 0;
+        while (index < paint) {
+            posDestroyed[index] = -1;
+            index++;
+
+        }
+    }
+    
+    
+    
+
     public int posdestroyed(int px) {
         int w = getWidth(), inicio = 0;
         int pos = 0, anchor = (w / this.paint);
@@ -106,18 +118,9 @@ public class Animation extends JComponent implements Runnable {
     public boolean destroyRect(int px, int py) {
         for (Rectangle rect : rects) {
             if (rect != null) {
-                if ((py <= rect.height) && (px >= rect.x && (px<= rect.x + rect.width))) {
-
+                if ((py <= rect.height) && (px >= rect.x && (px <= rect.x + rect.width))) {
                     this.survivors -= 1;
-//                    this.posDestroy = posdestroyed(px);
                     this.posDestroyed[rects.indexOf(rect)] = rects.indexOf(rect);
-                    System.out.println("Lo toco");
-                    System.out.println("pos detroy: " + this.posDestroyed[rects.indexOf(rect)]);
-                    String arreglo = "";
-                    for (int i = 0; i < posDestroyed.length; i++) {
-                        arreglo += posDestroyed[i] + " ";
-                    }
-                    System.out.println("arreglo: " + arreglo);
                     return true;
                 }
             }
@@ -125,7 +128,7 @@ public class Animation extends JComponent implements Runnable {
         }
         //De este pedazo no es necesario ya que se evalua en el hilo
         if (py <= 0) {
-            System.out.println("toca una parte vacia");
+            
             return true;
         }
         return false;
@@ -148,8 +151,8 @@ public class Animation extends JComponent implements Runnable {
         while (this.thread != null) {
             posx += dx;
             posy += dy;
-            
-            if (this.winner=winner()) {
+
+            if (this.winner = winner()) {
                 JOptionPane.showMessageDialog(null, "Eres ganador!!!!!");
                 this.pause();
             }
@@ -211,11 +214,21 @@ public class Animation extends JComponent implements Runnable {
     }
 
     public void restart() {
+
         this.pause();
-        posx = 0;
-        posy = 10;
-        posxR = (getWidth() / 2) - 40;
-        this.init();
+        posx = (getWidth() / 2) - 30;
+        posy = getHeight() - 90;
+        posxR = (getWidth() / 2) - 60;
+
+        if (this.winner) {
+            this.winner = false;
+            reniciarTablero();
+        }
+        
+    this.init();
     }
+     
 
 }
+
+
