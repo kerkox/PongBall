@@ -30,8 +30,9 @@ public class Application extends javax.swing.JFrame {
         int pxR = (w / 2) - 60;
         int px = (w / 2) - 30;
         int py = h - 90;
-
-        animation = new Animation(px, py, pxR);
+        System.out.println("w: "+ w);
+        System.out.println("pw: "+ px);
+        animation = new Animation(px, py, pxR,panel);
 
         SpeedBall.setValue(animation.speed);
         this.panel.add(animation);
@@ -79,6 +80,7 @@ public class Application extends javax.swing.JFrame {
         });
 
         panel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        panel.setPreferredSize(new java.awt.Dimension(365, 4));
         panel.setLayout(new java.awt.BorderLayout());
 
         jLabel1.setText("Velocidad");
